@@ -69,7 +69,7 @@ subdirs = int(input())
 print("\nEnter number of dirs in subdirs: ", end = "")
 dirs = int(input())
 
-if subdirs <= 0 or dirs <= 0 or files <= 0:
+if subdirs <= 0 or dirs <= 0 or files <= 0 or files > 3000:
     print("Wrong input!\n")
     exit()
 
