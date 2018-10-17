@@ -96,6 +96,5 @@ for address, dirs, files in os.walk(startdir):
 print("\nEnter number of test: ", end = "")
 test = input()
 
-print(test)
 print("\n\nFilling files with data...\n")
 FillFiles(startdir, test)
