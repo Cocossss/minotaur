@@ -1,7 +1,5 @@
 import os
 
-startdir = os.getcwd()
-
 def GetFilePath(startdir, filename):
     folder = []
 
@@ -13,9 +11,9 @@ def GetFilePath(startdir, filename):
         for file in files:
             if file == filename:
                 is_exist = True
-                print(root+"/"+file)
+                print(os.path.join(root, file))
 
-                with open(root+"/"+file) as inf:
+                with open(os.path.join(root, file)) as inf:
                     for line in inf:
                         line = line.strip()
                         if line == "Minotaur":
@@ -40,5 +38,11 @@ def GetFilePath(startdir, filename):
         return
 
 
-print("Getting Minotaur...")
-GetFilePath(startdir, "file.txt")
+def ShowPath():
+
+    startdir = os.getcwd()
+    print("Getting Minotaur...")
+    GetFilePath(os.path.join(startdir, "root"), "file.txt")
+
+if __name__ == "__main__":
+    ShowPath()
