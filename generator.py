@@ -99,6 +99,13 @@ def generate():
             break
 
     os.chdir(startdir)
+
+    print("\nCreated empty files:\n")
+    for address, dirs, files in os.walk(os.path.join(startdir, "root")):
+        for file in files:
+            abs, relative = os.path.join(address,file).split("root")
+            print(relative)
+
     print("\nEnter number of test (test file must exist): ", end = "")
     test = input()
 
