@@ -1,6 +1,0 @@
-/dir_0/dir1/file.txt
-Minotaur
-/dir_0/dir_2/dir3/file1.txt
-@include file2.txt
-/dir_0/dir_2/dir_4/dir5/file2.txt
-Minotaur
