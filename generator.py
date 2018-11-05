@@ -1,9 +1,11 @@
 import shutil
 import os
 import minotaur
+import random
 
 def CreateDirsFiles():
 
+    possib = ["Include","Deadlock"]
     startdir = os.getcwd()
 
     if os.path.isdir(os.path.join(startdir, "root")):
@@ -13,26 +15,65 @@ def CreateDirsFiles():
     os.chdir(os.path.join(startdir, "root"))
     nextdir = os.path.join(startdir, "root")
 
-    print("Hello! This is files and directories maker.")
-    print("\nEnter number of files in dirs: ", end = "")
-    files = int(input())
+    lenchain = random.randint(1, 8)
+    chain = []
+    notchain = []
 
-    print("\nEnter number of subdirs: ", end ="")
-    subdirs = int(input())
+    nextfile = ""
+    for i in range(lenchain):
+        if i == 0:
+            nextfile = "file.txt"
 
-    print("\nEnter number of dirs in subdirs: ", end = "")
-    dirs = int(input())
+        includes = random.randint(1, 4)
+        Minotaur = random.randint(1, includes)
+        current = nextfile
 
-    if subdirs <= 0 or dirs <= 0 or files <= 0 or files > 3000:
-        print("Wrong input!\n")
-        exit()
+        for j in range(includes):
+                num = "file{}.txt".format(str(random.randint(0, 3000)))
+                while num in chain or num in notchain:
+                    num = "file{}.txt".format(str(random.randint(0, 3000)))
 
-    print("\n\nCreating dirs and files...\n")
+                with open(os.path.join(nextdir, current), "a+") as inf:
+                    inf.write("@include {}\n".format(num))
 
+                if j == Minotaur-1:
+                    nextfile = num
+                    chain.append(num)
+
+                else:
+                    notchain.append(num)
+
+    with open(os.path.join(nextdir, nextfile), "a+") as inf:
+        inf.write("Minotaur")
+
+    for i in notchain:
+        if random.choice(possib) == "Include":
+            includes = random.randint(1, 3)
+
+            for j in range(includes):
+                num = "file{}.txt".format(str(random.randint(0, 3000)))
+
+                while num in notchain or num in chain:
+                    num = "file{}.txt".format(str(random.randint(0, 3000)))
+
+            with open(os.path.join(nextdir, i), "a+") as inf:
+                inf.write("@include {}\n".format(num))
+                notchain.append(num)
+
+        else:
+            with open(os.path.join(nextdir, i), "a+") as inf:
+                inf.write("Deadlock")
+
+    count = 0
+    flag = False
     all_dirs = 0
-    all_files = 0
+    dirs = random.randint(1,4)
+    filelist = chain + notchain + ["file.txt"]
+    files = len(chain)*dirs//len(filelist)
 
-    for i in range(subdirs):
+    if files == 0:
+        files = 2*len(filelist)//(len(chain)*dirs)
+    for i in range(len(chain)):
         dir = "dir_" + str(all_dirs)
         nextdir = os.path.join(nextdir, dir)
         os.mkdir(nextdir)
@@ -40,78 +81,26 @@ def CreateDirsFiles():
         all_dirs += 1
 
         for i in range(dirs):
-            os.mkdir(os.path.join(nextdir, "{}{}".format("dir", str(all_dirs))))
-            os.chdir(os.path.join(nextdir, "{}{}".format("dir", str(all_dirs))))
+            os.mkdir(os.path.join(nextdir, "dir{}".format(str(all_dirs))))
+            os.chdir(os.path.join(nextdir, "dir{}".format(str(all_dirs))))
             all_dirs += 1
 
-            for j in range(files):
-                file = "{}{}{}".format("file", str(all_files), ".txt")
-                all_files += 1
-                f = open(file, "w")
-                f.close()
+            for i in range(files):
+                if count == len(chain)+len(notchain)+1:
+                    flag = True
+                    break
+                if not os.path.isfile(os.path.join(startdir, "root", filelist[count])):
+                    filelist.remove(filelist[count])
+                shutil.move(os.path.join(startdir, "root", filelist[count]), os.path.join(nextdir, "dir{}".format(str(all_dirs-1))))
+                count += 1
 
-            os.chdir(nextdir)
-
-    return all_dirs, all_files, startdir
-
-
-def FillFiles(startdir, test):
-    list = []
-
-    if not os.path.exists(os.path.join(startdir, "Tests", "{}{}{}".format("input_file", test, ".txt"))):
-        print("{}{}{}\n". format("file ", os.path.join(startdir, "Tests", "input_file" + test + ".txt "), "doesn't exist!"))
-        return
-
-    with open(os.path.join(startdir, "Tests", "{}{}{}".format("input_file", test, ".txt")), "r") as inf:
-        for line in inf:
-            list.append(line.strip())
-
-    for i in range(len(list)-1):
-        if os.path.isfile(os.path.join(startdir, "root") + list[i]):
-            with open(os.path.join(startdir, "root")  + list[i], "a") as inf:
-                while not os.path.isfile(os.path.join(startdir, "root")  + list[i+1]):
-                    inf.write(list[i+1] + "\n")
-                    i = i + 1
-
-                    if i == len(list) - 1:
-                        break
-
-def generate():
-
-    dnum, fnum, startdir = CreateDirsFiles()
-
-    print("Enter number of file, that will begin search (note: number must be >= 0 and <=", fnum-1, "): ", end = "")
-    startfile = int(input())
-
-    if not (startfile >= 0 and startfile <= fnum-1):
-        print("number must be >= 0 and <=", fnum-1, "\nTry again\n")
-        exit()
-
-    flag = False
-    startwalk = startdir
-    for address, dirs, files in os.walk(startwalk):
-        for file in files:
-            if file == "file" + str(startfile) + ".txt":
-                os.rename(os.path.join(address, "{}{}{}".format("file", str(startfile), ".txt")), os.path.join(address, "file.txt"))
-                flag = True
+            if flag == True:
                 break
+
         if flag == True:
             break
-
     os.chdir(startdir)
 
-    print("\nCreated empty files:\n")
-    for address, dirs, files in os.walk(os.path.join(startdir, "root")):
-        for file in files:
-            abs, relative = os.path.join(address,file).split("root")
-            print(relative)
-
-    print("\nEnter number of test (test file must exist): ", end = "")
-    test = input()
-
-    print("\n\nFilling files with data...\n")
-    FillFiles(startdir, test)
-
 if __name__ == "__main__":
-    generate()
+    CreateDirsFiles()
     minotaur.ShowPath()

@@ -41,7 +41,6 @@ def GetFilePath(startdir, filename):
 def ShowPath():
 
     startdir = os.getcwd()
-    print("Getting Minotaur...")
     GetFilePath(os.path.join(startdir, "root"), "file.txt")
 
 if __name__ == "__main__":
