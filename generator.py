@@ -73,6 +73,7 @@ def CreateDirsFiles():
 
     if files == 0:
         files = 2*len(filelist)//(len(chain)*dirs)
+
     for i in range(len(chain)):
         dir = "dir_" + str(all_dirs)
         nextdir = os.path.join(nextdir, dir)
@@ -99,6 +100,7 @@ def CreateDirsFiles():
 
         if flag == True:
             break
+
     os.chdir(startdir)
 
 if __name__ == "__main__":
