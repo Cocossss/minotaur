@@ -105,4 +105,9 @@ def CreateDirsFiles():
 
 if __name__ == "__main__":
     CreateDirsFiles()
-    minotaur.ShowPath()
+    if not os.path.isdir(os.path.join(os.getcwd(), "root")):
+        print("Couldn't create directory root\n")
+    elif not os.listdir(os.path.join(os.getcwd(), "root")):
+        print("Directory root is empty\n")
+    else:
+        minotaur.ShowPath()

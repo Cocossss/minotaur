@@ -37,11 +37,15 @@ def GetFilePath(startdir, filename):
         print("file ", filename, "doesn't exist!")
         return
 
-
 def ShowPath():
 
     startdir = os.getcwd()
-    GetFilePath(os.path.join(startdir, "root"), "file.txt")
+    if not os.path.isdir(os.path.join(startdir, "root")):
+        print("directory root doesn't exist!\n")
+    elif not os.listdir(os.path.join(startdir, "root")):
+        print("directory root is empty!\n")
+    else:
+        GetFilePath(os.path.join(startdir, "root"), "file.txt")
 
 if __name__ == "__main__":
     ShowPath()
